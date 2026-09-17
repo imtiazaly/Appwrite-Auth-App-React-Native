@@ -85,4 +85,4 @@ class AppwriteService {
   }
 }
 
-export default new AppwriteService();
+export default AppwriteService;
