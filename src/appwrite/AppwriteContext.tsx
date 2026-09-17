@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import React, { createContext, FC, PropsWithChildren, useState } from 'react';
 
 import Appwrite from './servce';
@@ -29,4 +28,4 @@ export const AppwriteProvider: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-export default AppwriteProvider;
+export default AppwriteContext;
