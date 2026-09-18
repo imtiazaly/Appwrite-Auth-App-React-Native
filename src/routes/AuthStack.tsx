@@ -1,14 +1,29 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import SignUp from '../screens/SignUp';
+import Login from '../screens/Login';
 
-const AuthStack = () => {
-  return (
-    <View>
-      <Text>AuthStack</Text>
-    </View>
-  );
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+
+type AuthStackParamList = {
+  SignUp: undefined;
+  Login: undefined;
 };
 
-export default AuthStack;
+const Stack = createNativeStackNavigator<AuthStackParamList>();
 
-const styles = StyleSheet.create({});
+export const AuthStack = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerTitleAlign: 'center',
+          headerBackButtonDisplayMode: 'minimal',
+        }}
+        initialRouteName="Login"
+      >
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Login" component={Login} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
