@@ -1,9 +1,13 @@
-import { Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
-import AppwriteContext from '../appwrite/AppwriteContext';
-import { Snackbar } from 'react-native-snackbar';
-import { FAB, Icon } from '@rneui/themed';
+
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@react-native-vector-icons/ionicons';
+import { Snackbar } from 'react-native-snackbar';
+
+import { FAB } from '@rneui/themed';
+
+import AppwriteContext from '../appwrite/AppwriteContext';
 
 type User = {
   name: string;
