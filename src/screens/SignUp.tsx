@@ -1,7 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-
+import React, { useContext, useState } from 'react';
 import {
-  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -10,10 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Ionicons from '@react-native-vector-icons/ionicons';
 import { Snackbar } from 'react-native-snackbar';
-import { FAB } from '@rneui/themed';
 import AppwriteContext from '../appwrite/AppwriteContext';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import {
@@ -32,7 +27,7 @@ type SignUpNavigationProps = NativeStackNavigationProp<
 >;
 type SignUpRouteProps = RouteProp<AuthStackParamList, 'SignUp'>;
 
-const SignUp = ({ navigation, route }: SignUpScreenProps) => {
+const SignUp = ({ navigation }: SignUpScreenProps) => {
   // ( navigation, route ) by Hooks
   const routeByHook = useRoute<SignUpRouteProps>();
   const navigationByHook = useNavigation<SignUpNavigationProps>();
@@ -67,11 +62,13 @@ const SignUp = ({ navigation, route }: SignUpScreenProps) => {
       appwrite
         .createUserAccount(user)
         .then(response => {
-          setIsLoggedIn(true);
-          Snackbar.show({
-            text: 'Account created successfully!',
-            duration: Snackbar.LENGTH_SHORT,
-          });
+          if (response) {
+            setIsLoggedIn(true);
+            Snackbar.show({
+              text: 'Account created successfully!',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          }
         })
         .catch(error => {
           console.error('Error creating user:', error);
