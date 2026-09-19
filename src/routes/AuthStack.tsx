@@ -4,7 +4,7 @@ import Login from '../screens/Login';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-type AuthStackParamList = {
+export type AuthStackParamList = {
   SignUp: undefined;
   Login: undefined;
 };
