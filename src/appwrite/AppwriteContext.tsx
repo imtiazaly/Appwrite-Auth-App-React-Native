@@ -5,24 +5,25 @@ import Appwrite from './servce';
 type AppwriteContextType = {
   appwrite: Appwrite;
   isLoggedIn: boolean;
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const AppwriteContext = createContext<AppwriteContextType>({
-  appwrite: new Appwrite(),
-  isLoggedIn: false,
-  setIsLoggedIn: () => {},
-});
+export const AppwriteContext = createContext<AppwriteContextType>(
+  {} as AppwriteContextType,
+);
 
 export const AppwriteProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [appwrite] = useState(() => new Appwrite());
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const defaultValue = {
-    appwrite: new Appwrite(),
-    isLoggedIn,
-    setIsLoggedIn,
-  };
+
   return (
-    <AppwriteContext.Provider value={defaultValue}>
+    <AppwriteContext.Provider
+      value={{
+        appwrite,
+        isLoggedIn,
+        setIsLoggedIn,
+      }}
+    >
       {children}
     </AppwriteContext.Provider>
   );

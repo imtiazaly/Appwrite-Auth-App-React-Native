@@ -10,11 +10,7 @@ import {
 } from 'react-native';
 import { Snackbar } from 'react-native-snackbar';
 import AppwriteContext from '../appwrite/AppwriteContext';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import {
-  NativeStackNavigationProp,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../routes/AuthStack';
 
 //  Props ({ navigation, route })
@@ -24,7 +20,6 @@ const Login = ({ navigation }: LoginScreenProps) => {
   const { appwrite, setIsLoggedIn } = useContext(AppwriteContext);
 
   const [error, setError] = useState<string>('');
-  const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -42,7 +37,12 @@ const Login = ({ navigation }: LoginScreenProps) => {
         .loginAccount(user)
         .then(response => {
           if (response) {
+            console.log('LOGIN SUCCESS - SESSION:', response);
+
             setIsLoggedIn(true);
+
+            console.log('LOGIN STATE SET TO TRUE');
+
             Snackbar.show({
               text: 'Login successful!',
               duration: Snackbar.LENGTH_SHORT,

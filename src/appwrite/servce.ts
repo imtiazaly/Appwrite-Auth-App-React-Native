@@ -53,9 +53,16 @@ class AppwriteService {
 
   async loginAccount({ email, password }: loginUserAccount) {
     try {
+      // Delete existing session before creating a new one
+      try {
+        await this.account.deleteSession({
+          sessionId: 'current',
+        });
+      } catch (error) {}
+
       return await this.account.createEmailPasswordSession({
-        email: email,
-        password: password,
+        email,
+        password,
       });
     } catch (error) {
       Snackbar.show({
@@ -63,9 +70,10 @@ class AppwriteService {
         duration: Snackbar.LENGTH_LONG,
       });
       console.log('Appwrite Service :: loginAccount :: ', error);
+
+      throw error;
     }
   }
-
   async getAccountDetails() {
     try {
       return await this.account.get();
