@@ -1,194 +1,312 @@
 import React, { useContext, useState } from 'react';
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Ionicons from '@react-native-vector-icons/ionicons';
 import { Snackbar } from 'react-native-snackbar';
 import AppwriteContext from '../appwrite/AppwriteContext';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../routes/AuthStack';
 
-//  Props ({ navigation, route })
 type LoginScreenProps = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
 const Login = ({ navigation }: LoginScreenProps) => {
   const { appwrite, setIsLoggedIn } = useContext(AppwriteContext);
 
-  const [error, setError] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleLogin = async () => {
-    if (email.length < 1 || password.length < 1) {
-      setError('Please fill in all fields');
+    if (!email.trim() || !password.trim()) {
+      setErrorMsg('Please fill in all fields.');
       return;
-    } else {
-      const user = {
-        email,
-        password,
-      };
+    }
 
-      appwrite
-        .loginAccount(user)
-        .then(response => {
-          if (response) {
-            console.log('LOGIN SUCCESS - SESSION:', response);
+    setErrorMsg('');
+    setIsLoading(true);
 
-            setIsLoggedIn(true);
-
-            console.log('LOGIN STATE SET TO TRUE');
-
-            Snackbar.show({
-              text: 'Login successful!',
-              duration: Snackbar.LENGTH_SHORT,
-            });
-          }
-        })
-        .catch(error => {
-          console.error('Login failed:', error);
-          setError('Login failed. Please check your credentials.');
+    try {
+      const response = await appwrite.loginAccount({ email, password });
+      if (response) {
+        setIsLoggedIn(true);
+        Snackbar.show({
+          text: 'Welcome back! Logged in successfully.',
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: '#10B981',
+          textColor: '#FFFFFF',
         });
+      }
+    } catch (err: any) {
+      console.error('Login failed:', err);
+      setErrorMsg(
+        err?.message || 'Login failed. Please check your credentials.',
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <View style={styles.formContainer}>
-        <Text style={styles.appName}>Appwrite Auth</Text>
-
-        {/* Email */}
-        <TextInput
-          keyboardType="email-address"
-          value={email}
-          onChangeText={text => setEmail(text)}
-          placeholderTextColor={'#AEAEAE'}
-          placeholder="Email"
-          style={styles.input}
-        />
-
-        {/* Password */}
-        <TextInput
-          value={password}
-          onChangeText={text => setPassword(text)}
-          placeholderTextColor={'#AEAEAE'}
-          placeholder="Password"
-          style={styles.input}
-          secureTextEntry
-        />
-
-        {/* Validation error */}
-        {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-        {/* Login button */}
-        <Pressable
-          onPress={handleLogin}
-          style={[styles.btn, { marginTop: error ? 10 : 20 }]}
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.flex1}
+      >
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.btnText}>Login</Text>
-        </Pressable>
+          {/* Header Branding */}
+          <View style={styles.headerContainer}>
+            <View style={styles.logoBadge}>
+              <Ionicons name="shield-checkmark" size={40} color="#F02E65" />
+            </View>
+            <Text style={styles.appName}>Appwrite Auth</Text>
+            <Text style={styles.subtitle}>
+              Sign in to manage your React Native app session
+            </Text>
+          </View>
 
-        {/* Sign up navigation */}
-        <Pressable
-          onPress={() => navigation.navigate('SignUp')}
-          style={styles.signUpContainer}
-        >
-          <Text style={styles.noAccountLabel}>
-            Don't have an account?{'  '}
-            <Text style={styles.signUpLabel}>Create an account</Text>
-          </Text>
-        </Pressable>
-      </View>
-    </KeyboardAvoidingView>
+          {/* Form Card */}
+          <View style={styles.card}>
+            {/* Email Field */}
+            <Text style={styles.label}>Email Address</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons
+                name="mail-outline"
+                size={20}
+                color="#94A3B8"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                value={email}
+                onChangeText={text => {
+                  setErrorMsg('');
+                  setEmail(text);
+                }}
+                placeholder="example@domain.com"
+                placeholderTextColor="#64748B"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                style={styles.input}
+              />
+            </View>
+
+            {/* Password Field */}
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons
+                name="lock-closed-outline"
+                size={20}
+                color="#94A3B8"
+                style={styles.inputIcon}
+              />
+              <TextInput
+                value={password}
+                onChangeText={text => {
+                  setErrorMsg('');
+                  setPassword(text);
+                }}
+                placeholder="Enter your password"
+                placeholderTextColor="#64748B"
+                secureTextEntry={!showPassword}
+                autoCapitalize="none"
+                style={styles.input}
+              />
+              <Pressable
+                onPress={() => setShowPassword(!showPassword)}
+                style={styles.eyeBtn}
+              >
+                <Ionicons
+                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={20}
+                  color="#94A3B8"
+                />
+              </Pressable>
+            </View>
+
+            {/* Error Banner */}
+            {errorMsg ? (
+              <View style={styles.errorContainer}>
+                <Ionicons name="alert-circle" size={18} color="#FF4D4D" />
+                <Text style={styles.errorText}>{errorMsg}</Text>
+              </View>
+            ) : null}
+
+            {/* Login Button */}
+            <Pressable
+              onPress={handleLogin}
+              disabled={isLoading}
+              style={({ pressed }) => [
+                styles.btn,
+                pressed && styles.btnPressed,
+                isLoading && styles.btnDisabled,
+              ]}
+            >
+              {isLoading ? (
+                <ActivityIndicator color="#FFFFFF" size="small" />
+              ) : (
+                <Text style={styles.btnText}>Sign In</Text>
+              )}
+            </Pressable>
+          </View>
+
+          {/* Navigation Link */}
+          <Pressable
+            onPress={() => navigation.navigate('SignUp')}
+            style={styles.signUpContainer}
+          >
+            <Text style={styles.noAccountLabel}>
+              Don't have an account?{' '}
+              <Text style={styles.signUpLabel}>Create Account</Text>
+            </Text>
+          </Pressable>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#0B0D17',
   },
-  formContainer: {
+  flex1: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
-    alignContent: 'center',
-    height: '100%',
+    paddingHorizontal: 24,
+    paddingVertical: 32,
+  },
+  headerContainer: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  logoBadge: {
+    width: 72,
+    height: 72,
+    borderRadius: 24,
+    backgroundColor: 'rgba(240, 46, 101, 0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(240, 46, 101, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
   },
   appName: {
-    color: '#f02e65',
-    fontSize: 40,
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    marginBottom: 20,
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 0.5,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#94A3B8',
+    marginTop: 6,
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: '#161B2E',
+    borderRadius: 20,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: '#232B45',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#CBD5E1',
+    marginBottom: 8,
+    marginTop: 12,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1E253B',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#2E3754',
+    paddingHorizontal: 12,
+    height: 50,
+  },
+  inputIcon: {
+    marginRight: 10,
   },
   input: {
-    backgroundColor: '#fef8fa',
-    padding: 10,
-    height: 40,
-    alignSelf: 'center',
-    borderRadius: 5,
-
-    width: '80%',
-    color: '#000000',
-
-    marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-
-    elevation: 1,
-  },
-  errorText: {
-    color: 'red',
-    alignSelf: 'center',
-    marginTop: 10,
-  },
-  btn: {
-    backgroundColor: '#ffffff',
-    padding: 10,
-    height: 45,
-
-    alignSelf: 'center',
-    borderRadius: 5,
-    width: '80%',
-    marginTop: 20,
-
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-
-    elevation: 3,
-  },
-  btnText: {
-    color: '#484848',
-    alignSelf: 'center',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  signUpContainer: {
-    marginTop: 80,
-  },
-  noAccountLabel: {
-    color: '#484848',
-    alignSelf: 'center',
-    fontWeight: 'bold',
+    flex: 1,
+    color: '#FFFFFF',
     fontSize: 15,
   },
+  eyeBtn: {
+    padding: 6,
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 77, 77, 0.1)',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 77, 77, 0.2)',
+  },
+  errorText: {
+    color: '#FF4D4D',
+    fontSize: 13,
+    marginLeft: 8,
+    flex: 1,
+  },
+  btn: {
+    backgroundColor: '#F02E65',
+    height: 52,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 24,
+    shadowColor: '#F02E65',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  btnPressed: {
+    opacity: 0.85,
+  },
+  btnDisabled: {
+    opacity: 0.6,
+  },
+  btnText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  signUpContainer: {
+    marginTop: 28,
+    alignItems: 'center',
+  },
+  noAccountLabel: {
+    fontSize: 14,
+    color: '#94A3B8',
+  },
   signUpLabel: {
-    color: '#1d9bf0',
+    color: '#F02E65',
+    fontWeight: '700',
   },
 });
 

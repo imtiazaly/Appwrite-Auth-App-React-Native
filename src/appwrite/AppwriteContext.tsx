@@ -1,6 +1,6 @@
 import React, { createContext, FC, PropsWithChildren, useState } from 'react';
 
-import Appwrite from './servce';
+import Appwrite from './service';
 
 type AppwriteContextType = {
   appwrite: Appwrite;
