@@ -11,9 +11,9 @@ A production-ready, full-stack **React Native mobile authentication application*
 
 ## 📱 App Screenshots & Preview
 
-| Login Screen | Sign Up Screen | Home Dashboard |
+| Sign Up Screen | Login Screen | Home Dashboard |
 | :---: | :---: | :---: |
-| <img src="./assets/awa.jpeg" width="260" alt="Login Screen" /> | <img src="./assets/awa2.jpeg" width="260" alt="Sign Up Screen" /> | <img src="./assets/awa3.jpeg" width="260" alt="Home Dashboard" /> |
+| <img src="./assets/awa.jpeg" width="260" alt="Login Screen" /> | <img src="./assets/awa3.jpeg" width="260" alt="Sign Up Screen" /> | <img src="./assets/awa2.jpeg" width="260" alt="Home Dashboard" /> |
 
 ---
 
