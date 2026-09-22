@@ -13,6 +13,7 @@ export const AppStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        animation: 'fade',
       }}
     >
       <Stack.Screen name="Home" component={Home} />

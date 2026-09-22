@@ -1,97 +1,145 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🚀 Appwrite Auth - React Native Mobile Application
 
-# Getting Started
+[![React Native](https://img.shields.io/badge/React_Native-v0.87.1-61DAFB?style=flat-square&logo=react)](https://reactnative.dev/)
+[![Appwrite SDK](https://img.shields.io/badge/Appwrite_SDK-v27.0.0-FD366E?style=flat-square&logo=appwrite)](https://appwrite.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-v6.0.3-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.style=flat-square)](LICENSE)
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+A production-ready, full-stack **React Native mobile authentication application** integrated with **Appwrite Backend as a Service (BaaS)**. Designed with a sleek modern dark theme, robust error handling, form validations, and clean state management.
 
-## Step 1: Start Metro
+---
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 📱 App Screenshots & Preview
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+| Login Screen | Sign Up Screen | Home Dashboard |
+| :---: | :---: | :---: |
+| <img src="./assets/awa.jpeg" width="260" alt="Login Screen" /> | <img src="./assets/awa2.jpeg" width="260" alt="Sign Up Screen" /> | <img src="./assets/awa3.jpeg" width="260" alt="Home Dashboard" /> |
 
-```sh
-# Using npm
-npm start
+---
 
-# OR using Yarn
-yarn start
+## ✨ Features
+
+- **🔐 Appwrite Cloud Authentication**: Native integration with Appwrite Account & Session APIs.
+- **⚡ Persistent Session Management**: Automatically restores session state on app launch.
+- **🛡️ Secure Password Toggling**: Show/Hide password field toggle with custom icons.
+- **🎨 Modern Dark Tech UI**: Sleek Appwrite brand identity (`#F02E65` accent, dark obsidian backdrop).
+- **⚠️ Error Handling & Validation**: Live form validation and instant feedback alerts via Snackbars.
+- **📱 Responsive Layout**: Supports all screen dimensions with `SafeAreaView` and keyboard avoidance.
+- **⚙️ Clean Architecture**: Decoupled `AppwriteService` class, React Context API, and TypeScript interfaces.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [React Native v0.87](https://reactnative.dev/)
+- **Backend**: [Appwrite BaaS](https://appwrite.io/) (Account & Auth APIs)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Navigation**: [React Navigation v7](https://reactnavigation.org/) (Native Stack)
+- **State Management**: React Context API (`AppwriteContext`)
+- **Icons & UI Components**: `@react-native-vector-icons/ionicons`, `react-native-snackbar`
+- **Config Management**: `react-native-config` for environment variables
+
+---
+
+## 📂 Project Structure
+
+```text
+Appwrite-Auth-App-React-Native/
+├── assets/                  # App screenshots & showcase media
+├── src/
+│   ├── appwrite/
+│   │   ├── AppwriteContext.tsx # Context Provider for Auth state & Appwrite service
+│   │   └── service.ts          # Appwrite SDK client setup & Auth API methods
+│   ├── components/
+│   │   └── Loading.tsx         # Modern dark theme loading screen
+│   ├── routes/
+│   │   ├── AppStack.tsx        # Authenticated routes (Home)
+│   │   ├── AuthStack.tsx       # Unauthenticated routes (Login, SignUp)
+│   │   └── Router.tsx          # Root routing & session checker
+│   ├── screens/
+│   │   ├── Home.tsx            # User profile dashboard & session metrics
+│   │   ├── Login.tsx           # Login screen with validation & eye toggle
+│   │   └── SignUp.tsx          # Account registration screen
+│   └── App.tsx                 # Root application component
+├── .env                    # Environment variables (Endpoint & Project ID)
+├── index.js                # App entry point with AppwriteProvider
+├── package.json
+└── README.md
 ```
 
-## Step 2: Build and run your app
+---
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+## 🚀 Getting Started
 
-### Android
+### Prerequisites
 
-```sh
-# Using npm
+Ensure you have installed:
+- [Node.js](https://nodejs.org/) `>= 22.11.0`
+- [Android Studio](https://developer.android.com/studio) (for Android Emulator) or Xcode (for iOS)
+- An active [Appwrite Cloud](https://cloud.appwrite.io/) project.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/imtiazaly/Appwrite-Auth-App-React-Native.git
+cd Appwrite-Auth-App-React-Native
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+APPWRITE_PROJECT_ID=your_appwrite_project_id_here
+```
+
+> **Note**: Replace `your_appwrite_project_id_here` with your Project ID from the Appwrite Console.
+
+### 4. Run the Application
+
+#### Android
+```bash
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+#### iOS
+```bash
+cd ios && bundle exec pod install && cd ..
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🔑 How Appwrite Auth Integration Works
 
-## Step 3: Modify your app
+### 1. SDK Service Initialization (`service.ts`)
+The `AppwriteService` encapsulates the Appwrite JS SDK `Client` and `Account` services:
 
-Now that you have successfully run the app, let's make changes!
+```typescript
+import { Account, ID, Client } from 'appwrite';
+import Config from 'react-native-config';
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+const appwriteClient = new Client();
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+appwriteClient
+  .setEndpoint(Config.APPWRITE_ENDPOINT)
+  .setProject(Config.APPWRITE_PROJECT_ID);
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+export const account = new Account(appwriteClient);
+```
 
-## Congratulations! :tada:
+### 2. Authentication Context (`AppwriteContext.tsx`)
+Wraps the application to share session state (`isLoggedIn`) and `appwrite` service methods seamlessly across all components.
 
-You've successfully run and modified your React Native App. :partying_face:
+---
 
-### Now what?
+## 📜 License
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Distributed under the MIT License. See `LICENSE` for more information.
